@@ -121,6 +121,7 @@ h1 {
   padding: 0.5em;
   color: white;
   text-shadow: 2px 2px #56A8E3;
+  font-size: 35px;
 }
 
 .filter-choices a:hover {
