@@ -3,7 +3,7 @@ let video;
 let poseNet;
 
 //cat filter
-let img;
+let catEarsImg;
 //bubbles filter
 let bubbles = []; // array of Bubble objects
 //xmas filter
@@ -12,6 +12,8 @@ let gravity;
 let zOff = 0;
 let spritesheet;
 let textures = [];
+//candy cane filter
+let candyCaneImg;
 
 //posnet
 let noseX = 0;
@@ -65,6 +67,10 @@ document.getElementById("trippy-choice").addEventListener("click", function () {
     switchFilter('trippy');
 });
 
+document.getElementById("candy-cane-choice").addEventListener("click", function () {
+    switchFilter('candy-cane');
+});
+
 function setup() {
     setupCanvas();
     setupVideo();
@@ -95,13 +101,6 @@ function setupBubbles() {
     }
 }
 
-function preload() {
-    //preload snow flakes
-    spritesheet = loadImage('assets/flakes32.png');
-    //preload cat image
-    img = loadImage("assets/cat-ear.png");
-}
-
 function setupSnowFlakes() {
     gravity = createVector(0, 0.3);
     for (let x = 0; x < spritesheet.width; x += 32) {
@@ -118,6 +117,15 @@ function setupSnowFlakes() {
         let design = random(textures);
         snow.push(new Snowflake(x, y, design));
     }
+}
+
+function preload() {
+    //preload cat image
+    catEarsImg = loadImage("assets/cat_ears.png");
+    //preload snow flakes image
+    spritesheet = loadImage('assets/flakes32.png');
+    //preload candy cane image
+    candyCaneImg = loadImage("assets/candy_cane.png");
 }
 
 function gotPoses(poses) {
@@ -192,6 +200,9 @@ function draw() {
     if (selectedFilter == 'trippy') {
         drawTrippy();
     }
+    if (selectedFilter == 'candy-cane') {
+        drawCandyCane();
+    }
 }
 
 function drawNone() {
@@ -248,7 +259,7 @@ function drawClown() {
 }
 
 function drawCat() {
-    image(img, noseX - 120, noseY - 200, img.width / 5, img.height / 5);
+    image(catEarsImg, noseX - 120, noseY - 200, catEarsImg.width / 5, catEarsImg.height / 5);
 }
 
 function drawFlower() {
@@ -292,7 +303,11 @@ function drawTrippy() {
     filter('INVERT');
 }
 
-// Bubble class
+function drawCandyCane() {
+    image(candyCaneImg, mouseX-candyCaneImg.width/7, mouseY-candyCaneImg.height/8, candyCaneImg.width/6, candyCaneImg.height/6);
+}
+
+
 function Bubble() {
     this.x = random(width);
     this.y = random(height);
