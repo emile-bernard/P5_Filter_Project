@@ -45,6 +45,7 @@ function setup() {
 	poseNet = ml5.poseNet(video, modelReady);
 	poseNet.on('pose', gotPoses);
 
+	// img = loadImage("https://banner2.kisspng.com/20180324/ayw/kisspng-cat-ear-kitten-ear-5ab5db64054cd5.8304372315218676200217.jpg");
     img = loadImage("assets/cat-ear.png");  // Load the image
 }
 
