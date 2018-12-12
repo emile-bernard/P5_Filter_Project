@@ -18,6 +18,9 @@ let textures = [];
 //candy cane filter
 let candyCaneImg;
 
+//wave filter
+let t = 0; // time variable
+
 //drawing mode filter
 let paths = [];// All the paths
 let painting = false;// Are we painting?
@@ -79,6 +82,10 @@ document.getElementById("trippy-choice").addEventListener("click", function () {
 
 document.getElementById("candy-cane-choice").addEventListener("click", function () {
     switchFilter('candy-cane');
+});
+
+document.getElementById("wave-choice").addEventListener("click", function () {
+    switchFilter('wave');
 });
 
 document.getElementById("drawing-mode-choice").addEventListener("click", function () {
@@ -153,7 +160,7 @@ function preload() {
 }
 
 function gotPoses(poses) {
-    console.log(poses);
+    // console.log(poses);
     if (poses.length > 0) {
         let newNoseX = poses[0].pose.keypoints[0].position.x;
         let newNoseY = poses[0].pose.keypoints[0].position.y;
@@ -226,6 +233,9 @@ function draw() {
     }
     if (selectedFilter == 'candy-cane') {
         drawCandyCane();
+    }
+    if (selectedFilter == 'wave') {
+        drawWave();
     }
     if (selectedFilter == 'drawing-mode') {
         drawDrawingMode();
@@ -332,6 +342,28 @@ function drawTrippy() {
 
 function drawCandyCane() {
     image(candyCaneImg, mouseX - candyCaneImg.width / 7, mouseY - candyCaneImg.height / 8, candyCaneImg.width / 6, candyCaneImg.height / 6);
+}
+
+function drawWave() {
+    // make a x and y grid of ellipses
+    for (let x = 0; x <= width; x = x + 30) {
+        for (let y = 0; y <= height; y = y + 30) {
+            // starting point of each circle depends on mouse position
+            let xAngle = map(mouseX, 0, width, -4 * PI, 4 * PI, true);
+            let yAngle = map(mouseY, 0, height, -4 * PI, 4 * PI, true);
+            // and also varies based on the particle's location
+            let angle = xAngle * (x / width) + yAngle * (y / height);
+
+            // each particle moves in a circle
+            let myX = x + 20 * cos(2 * PI * t + angle);
+            let myY = y + 20 * sin(2 * PI * t + angle);
+
+            fill('#1ee8fc');
+            ellipse(myX, myY, 20); // draw particle
+        }
+    }
+
+    t = t + 0.01; // update time
 }
 
 function drawDrawingMode() {
