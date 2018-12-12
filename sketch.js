@@ -4,16 +4,26 @@ let poseNet;
 
 //cat filter
 let catEarsImg;
+
 //bubbles filter
 let bubbles = []; // array of Bubble objects
+
 //xmas filter
 let snow = [];
 let gravity;
 let zOff = 0;
 let spritesheet;
 let textures = [];
+
 //candy cane filter
 let candyCaneImg;
+
+//drawing mode filter
+let paths = [];// All the paths
+let painting = false;// Are we painting?
+let next = 0;// How long until the next circle
+let current;// Where are we now and where were we?
+let previous;
 
 //posnet
 let noseX = 0;
@@ -71,6 +81,10 @@ document.getElementById("candy-cane-choice").addEventListener("click", function 
     switchFilter('candy-cane');
 });
 
+document.getElementById("drawing-mode-choice").addEventListener("click", function () {
+    switchFilter('drawing-mode');
+});
+
 document.getElementById("export-choice").addEventListener("click", function () {
     exportCanvas();
 });
@@ -82,6 +96,7 @@ function setup() {
 
     setupBubbles();
     setupSnowFlakes();
+    setupDrawingMode();
 }
 
 function setupCanvas() {
@@ -123,6 +138,11 @@ function setupSnowFlakes() {
     }
 }
 
+function setupDrawingMode() {
+    current = createVector(0, 0);
+    previous = createVector(0, 0);
+}
+
 function preload() {
     //preload cat image
     catEarsImg = loadImage("assets/cat_ears.png");
@@ -133,7 +153,7 @@ function preload() {
 }
 
 function gotPoses(poses) {
-    //console.log(poses);
+    console.log(poses);
     if (poses.length > 0) {
         let newNoseX = poses[0].pose.keypoints[0].position.x;
         let newNoseY = poses[0].pose.keypoints[0].position.y;
@@ -206,6 +226,9 @@ function draw() {
     }
     if (selectedFilter == 'candy-cane') {
         drawCandyCane();
+    }
+    if (selectedFilter == 'drawing-mode') {
+        drawDrawingMode();
     }
 }
 
@@ -308,8 +331,114 @@ function drawTrippy() {
 }
 
 function drawCandyCane() {
-    image(candyCaneImg, mouseX-candyCaneImg.width/7, mouseY-candyCaneImg.height/8, candyCaneImg.width/6, candyCaneImg.height/6);
+    image(candyCaneImg, mouseX - candyCaneImg.width / 7, mouseY - candyCaneImg.height / 8, candyCaneImg.width / 6, candyCaneImg.height / 6);
 }
+
+function drawDrawingMode() {
+    // If it's time for a new point
+    if (millis() > next && painting) {
+
+        // Grab mouse position
+        current.x = mouseX;
+        current.y = mouseY;
+
+        // New particle's force is based on mouse movement
+        let force = p5.Vector.sub(current, previous);
+        force.mult(0.05);
+
+        // Add new particle
+        paths[paths.length - 1].add(current, force);
+
+        // Schedule next circle
+        next = millis() + random(100);
+
+        // Store mouse values
+        previous.x = current.x;
+        previous.y = current.y;
+    }
+
+    // Draw all paths
+    for (let i = 0; i < paths.length; i++) {
+        paths[i].update();
+        paths[i].display();
+    }
+}
+
+// Start it up
+function mousePressed() {
+    next = 0;
+    painting = true;
+    previous.x = mouseX;
+    previous.y = mouseY;
+    paths.push(new Path());
+}
+
+// Stop
+function mouseReleased() {
+    painting = false;
+}
+
+// A Path is a list of particles
+function Path() {
+    this.particles = [];
+    this.hue = random(100);
+}
+
+Path.prototype.add = function (position, force) {
+    // Add a new particle with a position, force, and hue
+    this.particles.push(new Particle(position, force, this.hue));
+};
+
+// Display plath
+Path.prototype.update = function () {
+    for (let i = 0; i < this.particles.length; i++) {
+        this.particles[i].update();
+    }
+};
+
+// Display plath
+Path.prototype.display = function () {
+    // Loop through backwards
+    for (let i = this.particles.length - 1; i >= 0; i--) {
+        // If we shold remove it
+        if (this.particles[i].lifespan <= 0) {
+            this.particles.splice(i, 1);
+            // Otherwise, display it
+        } else {
+            this.particles[i].display(this.particles[i + 1]);
+        }
+    }
+};
+
+// Particles along the path
+function Particle(position, force, hue) {
+    this.position = createVector(position.x, position.y);
+    this.velocity = createVector(force.x, force.y);
+    this.drag = 0.95;
+    this.lifespan = 255;
+}
+
+Particle.prototype.update = function () {
+    // Move it
+    this.position.add(this.velocity);
+    // Slow it down
+    this.velocity.mult(this.drag);
+    // Fade it out
+    this.lifespan--;
+};
+
+// Draw particle and connect it with a line
+// Draw a line to another
+Particle.prototype.display = function (other) {
+    stroke(255, this.lifespan);
+    fill(255, this.lifespan / 2);
+    ellipse(this.position.x, this.position.y, 8, 8);
+    // If we need to draw a line
+    if (other) {
+        line(this.position.x, this.position.y, other.position.x, other.position.y);
+    }
+    noStroke();
+};
 
 function exportCanvas() {
     saveCanvas(canvas, 'my_filter_picture.jpg');
@@ -333,7 +462,7 @@ function Bubble() {
         fill('#1ee8fc');
         ellipse(this.x, this.y, this.diameter, this.diameter);
         fill('#ffffff');
-        ellipse(this.x+this.diameter/4, this.y-this.diameter/4, this.diameter/5, this.diameter/5);
+        ellipse(this.x + this.diameter / 4, this.y - this.diameter / 4, this.diameter / 5, this.diameter / 5);
         noStroke();
     };
 }
