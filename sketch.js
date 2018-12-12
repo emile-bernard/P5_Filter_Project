@@ -71,6 +71,10 @@ document.getElementById("candy-cane-choice").addEventListener("click", function 
     switchFilter('candy-cane');
 });
 
+document.getElementById("export-choice").addEventListener("click", function () {
+    exportCanvas();
+});
+
 function setup() {
     setupCanvas();
     setupVideo();
@@ -305,6 +309,10 @@ function drawTrippy() {
 
 function drawCandyCane() {
     image(candyCaneImg, mouseX-candyCaneImg.width/7, mouseY-candyCaneImg.height/8, candyCaneImg.width/6, candyCaneImg.height/6);
+}
+
+function exportCanvas() {
+    saveCanvas(canvas, 'my_filter_picture.jpg');
 }
 
 
