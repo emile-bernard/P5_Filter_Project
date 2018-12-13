@@ -21,6 +21,10 @@ let candyCaneImg;
 //wave filter
 let t = 0; // time variable
 
+//he man filter
+let hemanSong;
+let isHeManFilterEnable = false;//Enable He man filter or not
+
 //drawing mode filter
 let paths = [];// All the paths
 let painting = false;// Are we painting?
@@ -88,6 +92,16 @@ document.getElementById("wave-choice").addEventListener("click", function () {
     switchFilter('wave');
 });
 
+document.getElementById("he-man-choice").addEventListener("click", function () {
+    switchFilter('he-man');
+
+    if (hemanSong.isPlaying() ) {
+        stopHeManSong();
+    } else {
+        startHeManSong();
+    }
+});
+
 document.getElementById("drawing-mode-choice").addEventListener("click", function () {
     switchFilter('drawing-mode');
 });
@@ -103,6 +117,7 @@ function setup() {
 
     setupBubbles();
     setupSnowFlakes();
+    setupHeMan();
     setupDrawingMode();
 }
 
@@ -145,6 +160,10 @@ function setupSnowFlakes() {
     }
 }
 
+function setupHeMan() {
+    hemanSong = loadSound('assets/heman_song.mp3');
+}
+
 function setupDrawingMode() {
     current = createVector(0, 0);
     previous = createVector(0, 0);
@@ -157,6 +176,8 @@ function preload() {
     spritesheet = loadImage('assets/flakes32.png');
     //preload candy cane image
     candyCaneImg = loadImage("assets/candy_cane.png");
+    //preload he man song
+    hemanSong = loadSound('assets/heman_song.mp3');
 }
 
 function gotPoses(poses) {
@@ -197,7 +218,14 @@ function modelReady() {
 function switchFilter(filter) {
     selectedFilter = filter;
 
+    //remove drawings
     noStroke();
+
+    //force tint to be clear
+    if(isHeManFilterEnable) {
+        tint(255, 255, 255, 100);
+    }
+
     clear();
 }
 
@@ -236,6 +264,9 @@ function draw() {
     }
     if (selectedFilter == 'wave') {
         drawWave();
+    }
+    if (selectedFilter == 'he-man') {
+        drawHeMan();
     }
     if (selectedFilter == 'drawing-mode') {
         drawDrawingMode();
@@ -366,6 +397,14 @@ function drawWave() {
     t = t + 0.01; // update time
 }
 
+function drawHeMan() {
+    tint(255, 182, 193, 100);
+
+    if(isHeManFilterEnable) {
+        filter(POSTERIZE, 20);
+    }
+}
+
 function drawDrawingMode() {
     // If it's time for a new point
     if (millis() > next && painting) {
@@ -471,6 +510,14 @@ Particle.prototype.display = function (other) {
     }
     noStroke();
 };
+
+function startHeManSong() {
+    hemanSong.play();
+}
+
+function stopHeManSong() {
+    hemanSong.stop();
+}
 
 function exportCanvas() {
     saveCanvas(canvas, 'my_filter_picture.jpg');
