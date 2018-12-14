@@ -3,12 +3,18 @@
 ## Description
 This project is a sinmple video filter using P5.js and Posnet.
 
+## Previews
+
+
 ## Setup
 - Open project with the Webstorm ide and open the index.html file.
 
 - On the top right corner select Chrome browser to open the project in Google Chrome.
 
-##Technologies used
-- [P5](https://p5js.org/)
+## Built With
+- [p5.js](https://p5js.org/)
+- [ml5.js](https://ml5js.org/)
 - [Posnet](https://github.com/tensorflow/tfjs-models/tree/master/posenet)
-- [Ml5](https://ml5js.org/)
+
+## Links
+- [Hour of Code with p5.js and PoseNet](https://youtu.be/EA3-k9mnLHs)
