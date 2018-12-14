@@ -4,7 +4,11 @@
 This project is a sinmple video filter using P5.js and Posnet.
 
 ## Previews
-
+![NoneCapture](docs/preview/NoneCapture.PNG?raw=true "NoneCapture")
+![RoundGlassesCapture](docs/preview/RoundGlassesCapture.PNG?raw=true "RoundGlassesCapture")
+![SquareGlassesCapture](docs/preview/SquareGlassesCapture.PNG?raw=true "SquareGlassesCapture")
+![BubblesCapture](docs/preview/BubblesCapture.PNG?raw=true "BubblesCapture")
+![CatEarsCapture](docs/preview/CatEarsCapture.PNG?raw=true "CatEarsCapture")
 
 ## Setup
 - Open project with the Webstorm ide and open the index.html file.
