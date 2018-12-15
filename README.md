@@ -1,7 +1,7 @@
 # P5_Filter_Project
 
 ## Description
-This project is a sinmple video filter using P5.js and Posnet.
+This project is a simple video filter using P5.js and Posnet.
 
 ## Previews
 ![NoneCapture](docs/preview/NoneCapture.PNG?raw=true "NoneCapture")
